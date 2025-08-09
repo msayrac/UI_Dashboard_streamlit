@@ -1,20 +1,37 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-st.title("Streamlit Demos")
 
-st.write("Welcome to the streamlit demos app!")
+st.title("Financial Portfolio Analysis Tool")
 
+principle  = st.number_input("Initial Investment Amount", min_value=0.0, max_value=1000.0, step = 100.0)
 
-st.header("Interactivity with widgets")
+annual_interest_rate = st.number_input("Annual Interest Rate (%)", min_value=0.0, max_value=5.0, step = 0.1)
 
-name = st.text_input("Enter your name")
+years = st.number_input("Number of years", min_value= 1.0, max_value=10.0, step= 1.0)
 
-st.write(f"Hello, {name}!")
+interest_rate = annual_interest_rate / 100
+time = np.arange(1, years+1)
 
-age = st.number_input("Enter your age",min_value=0, max_value=120, value=18)
-st.write(f"Your age is {age}")
+amount = principle * (1+interest_rate)**time
 
-st.write(f"You are {age} years ols")
+data = pd.DataFrame({
+"Year": time,
+"Investment Value": amount.round(2)
+})
 
+st.subheader("Investment growth over time")
+st.dataframe(data)
+
+fig, ax = plt.subplots()
+ax.plot(data["Year"], data["Investment Value"], marker="o")
+ax.set_xlabel("Year")
+ax.set_ylabel("Investment value")
+ax.set_title("Investment growth over time")
+ax.grid(True)
+
+st.pyplot(fig)
 
 
